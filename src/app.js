@@ -15,6 +15,4 @@ const userRoutes = require('../Routes/UserRoutes');
 
 app.use('/api/v1/user', userRoutes);
 
-
-
 module.exports = app;
