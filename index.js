@@ -1,28 +1,22 @@
-require('dotenv').config();
-
 const express = require('express');
-const mysql = require('mysql');     
 const app = express();
-const port = 3000;
-console.log(process.env.DB_HOST);
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+
+app.use(express.json());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+    next();
 });
 
-db.connect((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Conectado a la base de datos MySQL');
-});
+var userRoutes = require('./Routes/UserRoutes');
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+app.use('/api/v1/user', userRoutes);
 
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => {
+  console.log("Server is running on port " + PORT);
 });
