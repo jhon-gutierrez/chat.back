@@ -11,12 +11,10 @@ app.use((req, res, next) => {
     next();
 });
 
-var userRoutes = require('./Routes/UserRoutes');
+const userRoutes = require('../Routes/UserRoutes');
 
 app.use('/api/v1/user', userRoutes);
 
-const PORT = process.env.PORT;
 
-app.listen(PORT, () => {
-  console.log("Server is running on port " + PORT);
-});
+
+module.exports = app;
