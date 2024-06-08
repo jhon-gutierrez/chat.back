@@ -32,6 +32,7 @@ exports.create = async (params) => {
       if (err) {
         resolve({
           status: constants.STATUSES.ERROR,
+          msg: err
         });
       } else {
         resolve({
