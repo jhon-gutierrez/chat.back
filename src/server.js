@@ -11,10 +11,9 @@ const io = require('socket.io')(server, {
 
 const PORT = process.env.PORT || 5000;
 
-io.on('connection', socketController);
+socketController.handleConnection(io);
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
 
