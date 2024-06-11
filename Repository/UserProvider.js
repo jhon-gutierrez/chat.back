@@ -1,4 +1,3 @@
-require('dotenv').config();
 const constants = require('../Utils/constants.js');
 
 let mysql = require('mysql');
@@ -12,7 +11,6 @@ function valida(plist) {
       res = false; 
       break; }
   }
-  console.log(res); 
   return res;
 }
 

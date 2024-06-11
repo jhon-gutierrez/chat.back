@@ -12,14 +12,15 @@ function handleConnection(io) {
 
     socket.on('sendMessage', async (data) => {
       const message = {
-          senderId: data.nickName,
-          message: data.message
-      }
+          message: data.message,
+          senderId: data.nickName
+      }      
       const result = await messageProvider.create(message);
-      if(result.status === constants.STATUSES.OK){
-        io.emit('receiveMessage', data);
-      }
+      io.emit('receiveMessage', data);
 
+      if(result.status === constants.STATUSES.OK){
+        
+      }
     });
 
     socket.on('disconnect', () => {
