@@ -4,7 +4,7 @@ const constants = {
       ERROR: 'error',
     },
   };
-  
+                                              
 Object.freeze(constants);
   
 module.exports = constants;  

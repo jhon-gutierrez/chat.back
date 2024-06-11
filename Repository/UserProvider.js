@@ -8,8 +8,11 @@ function valida(plist) {
   let res = true;
   for (let index = 0; index < plist.length; index++) {
     const element = plist[index];
-    if (element == null || element == undefined) { res = false; break; }
+    if (element == null || element == undefined) { 
+      res = false; 
+      break; }
   }
+  console.log(res); 
   return res;
 }
 

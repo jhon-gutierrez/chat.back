@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const userRoutes = require('../Routes/UserRoutes');
+const messageRoutes = require('../Routes/messageRoutes');
 
 app.use(express.json());
 
@@ -11,8 +13,8 @@ app.use((req, res, next) => {
     next();
 });
 
-const userRoutes = require('../Routes/UserRoutes');
-
 app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/message', messageRoutes);
+
 
 module.exports = app;
