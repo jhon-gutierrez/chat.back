@@ -15,12 +15,12 @@ function valida(plist) {
 }
 
 exports.create = async (params) => {
-  return new Promise((resolve, _) => {
+  return new Promise((resolve, reject) => {
     const { nickName } = params;
     let data = [nickName];
 
     if (!valida(data)) {
-      resolve({
+      reject({
         status: constants.STATUSES.ERROR,
         msg: 'Invalid data'
       });
@@ -31,7 +31,7 @@ exports.create = async (params) => {
 
     connection.query(sql, data, (err, results, fields) => {
       if (err) {
-        resolve({
+        reject({
           status: constants.STATUSES.ERROR,
           msg: err
         });
