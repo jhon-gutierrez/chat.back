@@ -11,15 +11,17 @@ function handleConnection(io) {
     });
 
     socket.on('sendMessage', async (data) => {
+
       const message = {
           message: data.message,
-          senderId: data.nickName
+          nickName: data.nickName
       }      
-      const result = await messageProvider.create(message);
-      io.emit('receiveMessage', data);
 
+      console.log(message);
+      const result = await messageProvider.create(message);
+      
       if(result.status === constants.STATUSES.OK){
-        
+        io.emit('receiveMessage', data);
       }
     });
 
