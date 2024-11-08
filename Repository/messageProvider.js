@@ -1,6 +1,5 @@
 const constants = require('../Utils/constants.js');
-const { configconnection } = require('./DataBaseConnection.js');
-const mysql = require('mysql');
+let pool = require('./DataBaseConnection.js');
 
 exports.create = async (params) => {
     console.log('Params received in create:', params); // Depuración
@@ -8,10 +7,8 @@ exports.create = async (params) => {
 
     return new Promise((resolve, reject) => {
 
-        const connection = mysql.createConnection(configconnection);
         const sql = 'CALL SP_Message_I(?, ?)';
-
-        connection.query(sql, [message,nickName], (err, results, fields) => {
+        pool.query(sql, [message,nickName], (err, results, fields) => {
                 
             if (err) {
                 console.log("No guardó el mensaje" + err);
@@ -28,6 +25,6 @@ exports.create = async (params) => {
                 });
             }
         });
-        connection.end();
+        //connection.end();
     });
 };

@@ -5,6 +5,7 @@ let users = [];
 function handleConnection(io) {
   io.on('connection', (socket) => {
 
+    //Aqui agrega a la lista los usuarios que se conectan
     socket.on('joinChat', (nickName) => {
       users.push({ id: socket.id, nickName });
       io.emit('userList', users);
@@ -25,6 +26,7 @@ function handleConnection(io) {
       }
     });
 
+    //Aquí actualiza la lista, filtrando a los usuarios desconectados
     socket.on('disconnect', () => {
       users = users.filter(user => user.id !== socket.id);
       io.emit('userList', users);
