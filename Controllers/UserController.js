@@ -5,14 +5,13 @@ const constants = require('../Utils/constants.js');
 
 exports.login = async (req, res) => {
     try {
-        const { nickName, password } = req.body;        
+        const { nickName, password } = req.body;    
         const user = await userProvider.findUserByNickName(nickName);  
         
         if (!user)
             return res.status(401).json({ msg: 'Username does not exist.' });        
 
         const isMatch = await bcrypt.compare(password, user.userPassword);  
-        console.log(user.userPassword)
         if (!isMatch)
             return res.status(401).json({ msg: 'Invalid password' });
 

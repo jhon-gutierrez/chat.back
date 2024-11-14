@@ -1,4 +1,5 @@
 const messageProvider = require("../Repository/messageProvider");
+const userProvider = require("../Repository/UserProvider")
 const constants = require("../Utils/constants");
 let users = [];
 
@@ -6,8 +7,10 @@ function handleConnection(io) {
   io.on('connection', (socket) => {
 
     //Aqui agrega a la lista los usuarios que se conectan
-    socket.on('joinChat', (nickName) => {
-      users.push({ id: socket.id, nickName });
+    socket.on('joinChat', async (nickName) => {
+      console.log("Al Socket llega el usuario: "+nickName);
+      const result = await userProvider.findUserByNickName(nickName);
+      users.push({ id: socket.id, nickName: result.nickName, cargo: result.cargo, correo: result.correo });
       io.emit('userList', users);
     });
 
@@ -15,7 +18,8 @@ function handleConnection(io) {
 
       const message = {
           message: data.message,
-          nickName: data.nickName
+          nickName: data.nickName,
+          recipientNickName: data.recipientNickName
       }      
 
       console.log(message);

@@ -2,12 +2,13 @@ const constants = require('../Utils/constants.js');
 const messageProvider = require("../Repository/messageProvider");
 
 exports.create = async (req, res, next) => {
-    const { message, nickName } = req.body;
+    const { message, nickName, recipientNickName } = req.body;
     try {
 
         const params = {
             message,
-            nickName
+            nickName,
+            recipientNickName
         };
         
         const response = await messageProvider.create(params);

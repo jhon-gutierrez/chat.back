@@ -3,12 +3,12 @@ let pool = require('./DataBaseConnection.js');
 
 exports.create = async (params) => {
     console.log('Params received in create:', params); // Depuración
-    const { message, nickName } = params;
+    const { message, nickName, recipientNickName  } = params;
 
     return new Promise((resolve, reject) => {
 
-        const sql = 'CALL SP_Message_I(?, ?)';
-        pool.query(sql, [message,nickName], (err, results, fields) => {
+        const sql = 'CALL SP_Message_I(?, ?, ?)';
+        pool.query(sql, [message,nickName, recipientNickName], (err, results, fields) => {
                 
             if (err) {
                 console.log("No guardó el mensaje" + err);

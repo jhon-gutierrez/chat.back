@@ -13,13 +13,16 @@ function valida(plist) {
 }
 
 exports.findUserByNickName = async (nickName) => {
+  console.log("En el provider llega el usuario: "+ nickName);
   return new Promise((resolve, reject) => {
     const sql = `CALL user_select_by_nickName(?)`;  
     pool.query(sql, [nickName], (err, results, fields) => {   
       if (err) {
         reject(err);
+        console.log("Se produjo un error: "+err)
       } else {
         resolve(results[0][0]);
+        console.log("Los resultados de la búsqueda: "+results[0][0])
       }
     });
   });
