@@ -1,13 +1,43 @@
 const userProvider = require("../Repository/UserProvider");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const constants = require('../Utils/constants.js');
+
+exports.login = async (req, res) => {
+    try {
+        const { nickName, password } = req.body;    
+        const user = await userProvider.findUserByNickName(nickName);  
+        
+        if (!user)
+            return res.status(401).json({ msg: 'Username does not exist.' });        
+
+        const isMatch = await bcrypt.compare(password, user.userPassword);  
+        if (!isMatch)
+            return res.status(401).json({ msg: 'Invalid password' });
+
+        const payload = {  
+            userId: user.id
+        };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); 
+
+        res.cookie('access_token', token, { httpOnly: true });   
+        return res.status(200).json({ msg: 'Login successful', status: 'OK'});
+    } catch (error) {
+        return res.status(500).json({ msg: error.message });
+    }
+};
 
 exports.create = async (req, res, next) => {
-
-    const { nickName } = req.body;  //Extrae el nickName del cuerpo de la solicitud
     
     try {
 
+        const { nickName, password } = req.body;  //Extrae el nickName y del cuerpo de la solicitud
+        const hashedPassword = bcrypt.hashSync(password, constants.SALT_ROUNDS.TEST);
+        console.log(hashedPassword);
         const params = {
-            nickName,              //Crea un objeto params con el nickName extraído
+            nickName,
+            password: hashedPassword              //Crea un objeto params con el nickName extraído
         };          
 
         const response = await userProvider.create(params); //Llama al método create del userProvider y espera su resultado

@@ -1,7 +1,5 @@
 const constants = require('../Utils/constants.js');
-
-let mysql = require('mysql');
-let { configconnection } = require('./DataBaseConnection.js');
+let pool = require('./DataBaseConnection.js');
 
 function valida(plist) {
   let res = true;
@@ -14,27 +12,44 @@ function valida(plist) {
   return res;
 }
 
+exports.findUserByNickName = async (nickName) => {
+  console.log("En el provider llega el usuario: "+ nickName);
+  return new Promise((resolve, reject) => {
+    const sql = `CALL user_select_by_nickName(?)`;  
+    pool.query(sql, [nickName], (err, results, fields) => {   
+      if (err) {
+        reject(err);
+        console.log("Se produjo un error: "+err)
+      } else {
+        resolve(results[0][0]);
+        console.log("Los resultados de la búsqueda: "+results[0][0])
+      }
+    });
+  });
+};
+
 exports.create = async (params) => {
-  return new Promise((resolve, _) => {
-    const { nickName } = params;
-    let data = [nickName];
+  return new Promise((resolve, reject) => {
+    const { nickName, password } = params;
+    let data = [nickName, password];
 
     if (!valida(data)) {
-      resolve({
+      reject({
         status: constants.STATUSES.ERROR,
         msg: 'Invalid data'
       });
     }
 
-    let connection = mysql.createConnection(configconnection);
-    let sql = `CALL SP_User_I(?)`;
-
-    connection.query(sql, data, (err, results, fields) => {
+    let sql = `CALL SP_User_I(?,?)`;
+    pool.query(sql, data, (err, results, fields) => {
       if (err) {
-        resolve({
+        reject({
           status: constants.STATUSES.ERROR,
           msg: err
         });
+
+        console.log("Error en /user/create:", err);
+        
       } else {
         resolve({
           status: constants.STATUSES.OK,
@@ -42,7 +57,5 @@ exports.create = async (params) => {
         });
       }
     });
-
-    connection.end();
   });
 }

@@ -13,7 +13,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/security', userRoutes);
 app.use('/api/v1/message', messageRoutes);
 
 
