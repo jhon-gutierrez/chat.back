@@ -2,7 +2,6 @@ const messageProvider = require("../Repository/messageProvider");
 const userProvider = require("../Repository/UserProvider")
 const constants = require("../Utils/constants");
 let users = [];
-let messages = [];
 
 function handleConnection(io) {
   io.on('connection', (socket) => {
@@ -16,25 +15,16 @@ function handleConnection(io) {
       io.emit('userList', users);
 
       const messagesList = await messageProvider.consultMessages(nickName);
-    
-      console.log("Lista de mensajes: ", messages);
       socket.emit('messagesList', messagesList.data);
     });
 
     socket.on('sendMessage', async (data) => {
 
-      const message = {
-          message: data.message,
-          nickName: data.nickName,
-          recipientNickName: data.recipientNickName,
-          status: data.status
-      }      
-
-      console.log(message);
-      const result = await messageProvider.create(message);
+      const result = await messageProvider.create(data);
       
       if(result.status === constants.STATUSES.OK){
-        io.emit('receiveMessage', data);
+        const storedMessage = result.data[0];
+        io.emit('receiveMessage', storedMessage);
       }
     });
 

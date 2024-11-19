@@ -2,7 +2,6 @@ const constants = require('../Utils/constants.js');
 let pool = require('./DataBaseConnection.js');
 
 exports.create = async (params) => {
-    console.log('Params received in create:', params); // Depuración
     const { message, nickName, recipientNickName, status  } = params;
 
     return new Promise((resolve, reject) => {
@@ -17,7 +16,7 @@ exports.create = async (params) => {
                     msg: err
                 });
             } else {
-                console.log("Guardó el mensaje");
+                console.log("Guardó el mensaje: ", results[0]);
                 var jsonResult =JSON.stringify(results[0]);
                 resolve({
                     status: constants.STATUSES.OK,
@@ -32,7 +31,7 @@ exports.create = async (params) => {
 exports.consultMessages = async (nickName) => {
     return new Promise((resolve, reject) => {
         const sql = `
-            SELECT nickName, recipientNickName, message, createDate, status 
+            SELECT nickName, recipientNickName, message, DATE_FORMAT(createDate, '%d/%m/%Y - %h:%i:%s %p') AS createDate, status 
             FROM messages 
             WHERE recipientNickName IN (?, 'generalgroup') OR nickName = ?
             ORDER BY createDate ASC
